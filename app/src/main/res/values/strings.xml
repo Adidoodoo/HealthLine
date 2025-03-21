@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">HealthLine</string>
+    <string name="error_blank_field">Field cannot be left blank</string>
+    <string name="error_invalid_email">Invalid email address</string>
+    <string name="error_invalid_mobile">Invalid mobile number</string>
+    <string name="error_password_mismatch">Passwords do not match</string>
+    <string name="error_invalid_password">Password must be at least 8 characters long</string>
+    <string name="error_password_length">Password must be at least 6 characters long</string>
+</resources>
