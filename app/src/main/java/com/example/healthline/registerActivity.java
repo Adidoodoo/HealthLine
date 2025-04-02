@@ -38,6 +38,7 @@ public class registerActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseAuth authen;
     private Map<String, Object> userInfo;
+    private Map<String, Object> loginInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,9 +136,12 @@ public class registerActivity extends AppCompatActivity {
                 }
 
                 if (isValid) {
-                    authenticateUser(inputEmail.getText().toString(), inputPassword.getText().toString());
+                    //authenticateUser(inputEmail.getText().toString(), inputPassword.getText().toString());
+                    registerUser();
                 }
             }
+
+            /*
             public void authenticateUser(String email, String password){
                 authen.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -153,16 +157,23 @@ public class registerActivity extends AppCompatActivity {
                         });
             }
 
+             */
+
             private void registerUser() {
                 userInfo = new HashMap<>();
+                loginInfo = new HashMap<>();
                 userInfo.put("firstName", inputFirstName.getText().toString());
                 userInfo.put("lastName", inputLastName.getText().toString());
                 userInfo.put("middleName", inputMiddleName.getText().toString());
                 userInfo.put("houseAddress", inputAddress.getText().toString());
-                userInfo.put("emailAddress", inputEmail.getText().toString());
+                userInfo.put("email", inputEmail.getText().toString());
                 userInfo.put("password", inputPassword.getText().toString());
+                userInfo.put("mobileNumber", inputMobileNumber.getText().toString());
+                loginInfo.put("email", inputEmail.getText().toString());
+                loginInfo.put("password", inputPassword.getText().toString());
+                loginInfo.put("mobileNumber", inputMobileNumber.getText().toString());
 
-                db.collection("users")
+                db.collection("userInformation")
                         .add(userInfo)
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
@@ -176,6 +187,25 @@ public class registerActivity extends AppCompatActivity {
                                 Log.w(TAG, "Error adding document", e);
                             }
                         });
+
+
+                db.collection("loginInformation")
+                        .add(loginInfo)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error adding document", e);
+                            }
+                        });
+
+                Toast.makeText(registerActivity.this, "Account Created", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(registerActivity.this, MainActivity.class));
             }
         });
 
@@ -183,9 +213,8 @@ public class registerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String email = "test@gmail.com";
-
-                db.collection("users")
-                        .whereEqualTo("emailAddress", email)
+                db.collection("loginInformation")
+                        .whereEqualTo("email", email)
                         .get()
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful() && !task.getResult().isEmpty()) {

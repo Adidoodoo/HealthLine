@@ -18,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseAuth authen;
 
+
+    /*
     @Override
     public void onStart(){
         super.onStart();
@@ -27,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
     }
+
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +42,11 @@ public class MainActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.buttonLogin);
         registerButton = findViewById(R.id.buttonRegister);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String email = "test@gmail.com";
-                db.collection("users")
-                        .whereEqualTo("emailAddress", email)
+        loginButton.setOnClickListener(view -> {
+                String email = "@gmail.com".trim();
+                db.collection("loginInformation")
+                        .whereGreaterThanOrEqualTo("email", "a@gmail.com")
+                        .whereLessThanOrEqualTo("email", "z@gmail.com")
                         .get()
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful() && !task.getResult().isEmpty()) {
@@ -53,14 +56,12 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(new Intent(MainActivity.this, registerActivity.class));
                             }
                         });
-            }
         });
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+
+
+        registerButton.setOnClickListener(view -> {
                 startActivity(new Intent(MainActivity.this, registerActivity.class));
-            }
         });
     }
 }

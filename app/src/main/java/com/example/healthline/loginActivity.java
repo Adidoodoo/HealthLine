@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -27,6 +28,7 @@ public class loginActivity extends AppCompatActivity {
     private Button login, directRegister;
     private FirebaseAuth authen;
     private FirebaseFirestore db;
+    private DatabaseReference dr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +52,13 @@ public class loginActivity extends AppCompatActivity {
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(loginActivity.this, "Email or Password cannot be empty", Toast.LENGTH_SHORT).show();
             } else {
-                checkUserCredentials(email, password);
+                //checkUserCredentials(email, password);
+                placeholderLogin(email, password);
             }
         });
     }
 
+    /*
     private void checkUserCredentials(String email, String password) {
         db.collection("users")
                 .whereEqualTo("emailAddress", email)
@@ -94,6 +98,32 @@ public class loginActivity extends AppCompatActivity {
                     }
                 });
     }
+
+     */
+
+
+    private void placeholderLogin(String email, String password){
+        db.collection("userInformation")
+                .whereEqualTo("email", email)
+                .whereEqualTo("password", password)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot documentSnapshots = task.getResult();
+                        if (documentSnapshots != null && !documentSnapshots.isEmpty()) {
+                            Intent intent = new Intent(loginActivity.this, homeActivity.class);
+                            intent.putExtra("email", email);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(loginActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(loginActivity.this, "Error checking credentials", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
 
     private void updateUI(FirebaseUser user) {
         startActivity(new Intent(loginActivity.this, homeActivity.class));
