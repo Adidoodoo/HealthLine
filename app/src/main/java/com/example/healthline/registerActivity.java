@@ -18,8 +18,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -32,6 +36,7 @@ public class registerActivity extends AppCompatActivity {
     private TextView errorLastName, errorFirstName, errorMiddleName, errorAddress, errorEmail, errorMobileNumber, errorPassword, errorConfirmPassword;
     private Button register, directLogin;
     private FirebaseFirestore db;
+    private FirebaseAuth authen;
     private Map<String, Object> userInfo;
 
     @Override
@@ -62,6 +67,7 @@ public class registerActivity extends AppCompatActivity {
         directLogin = findViewById(R.id.buttonLoginRedirect);
 
         db = FirebaseFirestore.getInstance();
+        authen = FirebaseAuth.getInstance();
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,33 +134,48 @@ public class registerActivity extends AppCompatActivity {
                     isValid = false;
                 }
 
-                if(isValid){
-                    userInfo = new HashMap<>();
-                    userInfo.put("firstName", inputFirstName.getText().toString());
-                    userInfo.put("lastName", inputLastName.getText().toString());
-                    userInfo.put("middleName", inputMiddleName.getText().toString());
-                    userInfo.put("houseAddress", inputAddress.getText().toString());
-                    userInfo.put("emailAddress", inputEmail.getText().toString());
-                    userInfo.put("password", inputPassword.getText().toString());
-                    db.collection("users")
-                            .add(userInfo)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.w(TAG, "Error adding document", e);
-                                }
-                            });
-
-                    Toast.makeText(registerActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(registerActivity.this, MainActivity.class));
+                if (isValid) {
+                    authenticateUser(inputEmail.getText().toString(), inputPassword.getText().toString());
                 }
+            }
+            public void authenticateUser(String email, String password){
+                authen.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if(task.isSuccessful()){
+                                    Toast.makeText(registerActivity.this, "Account Created", Toast.LENGTH_SHORT).show();
+                                    registerUser();
+                                }else{
+                                    Toast.makeText(registerActivity.this, "Account Creation Failed", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
 
+            private void registerUser() {
+                userInfo = new HashMap<>();
+                userInfo.put("firstName", inputFirstName.getText().toString());
+                userInfo.put("lastName", inputLastName.getText().toString());
+                userInfo.put("middleName", inputMiddleName.getText().toString());
+                userInfo.put("houseAddress", inputAddress.getText().toString());
+                userInfo.put("emailAddress", inputEmail.getText().toString());
+                userInfo.put("password", inputPassword.getText().toString());
+
+                db.collection("users")
+                        .add(userInfo)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error adding document", e);
+                            }
+                        });
             }
         });
 
