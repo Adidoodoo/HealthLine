@@ -18,7 +18,7 @@
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_nav_menu"
         app:itemIconTint="@color/healthcare_blue"
-        app:itemTextColor="@color/black"
+        app:itemTextColor="@color/white"
         app:labelVisibilityMode="labeled" />
 
 </RelativeLayout>

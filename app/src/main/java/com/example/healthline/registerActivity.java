@@ -12,19 +12,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -136,95 +131,98 @@ public class registerActivity extends AppCompatActivity {
                 }
 
                 if (isValid) {
-                    //authenticateUser(inputEmail.getText().toString(), inputPassword.getText().toString());
-                    registerUser();
+                    authenUser();
                 }
             }
 
-            /*
-            public void authenticateUser(String email, String password){
+
+            public void authenUser() {
+                String email = inputEmail.getText().toString().trim();
+                String password = inputPassword.getText().toString().trim();
+
                 authen.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if(task.isSuccessful()){
-                                    Toast.makeText(registerActivity.this, "Account Created", Toast.LENGTH_SHORT).show();
-                                    registerUser();
-                                }else{
-                                    Toast.makeText(registerActivity.this, "Account Creation Failed", Toast.LENGTH_SHORT).show();
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                FirebaseUser user = authen.getCurrentUser();
+                                if (user != null) {
+                                    registerUser(user.getUid(), email);
                                 }
+                            } else {
+                                Toast.makeText(registerActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             }
                         });
             }
 
-             */
 
-            private void registerUser() {
+            private void registerUser(String uid, String email) {
                 userInfo = new HashMap<>();
                 loginInfo = new HashMap<>();
-                userInfo.put("firstName", inputFirstName.getText().toString());
-                userInfo.put("lastName", inputLastName.getText().toString());
-                userInfo.put("middleName", inputMiddleName.getText().toString());
-                userInfo.put("houseAddress", inputAddress.getText().toString());
-                userInfo.put("email", inputEmail.getText().toString());
-                userInfo.put("password", inputPassword.getText().toString());
-                userInfo.put("mobileNumber", inputMobileNumber.getText().toString());
+                userInfo.put("firstName", inputFirstName.getText().toString().trim());
+                userInfo.put("lastName", inputLastName.getText().toString().trim());
+                userInfo.put("middleName", inputMiddleName.getText().toString().trim());
+                userInfo.put("address", inputAddress.getText().toString().trim());
+                userInfo.put("email", email);
+                userInfo.put("mobileNumber", inputMobileNumber.getText().toString().trim());
+                userInfo.put("userId", uid);
+
+
                 loginInfo.put("email", inputEmail.getText().toString());
                 loginInfo.put("password", inputPassword.getText().toString());
                 loginInfo.put("mobileNumber", inputMobileNumber.getText().toString());
+                loginInfo.put("userId", uid);
 
-                db.collection("userInformation")
-                        .add(userInfo)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                            }
+                db.collection("userInformation").document(uid)
+                        .set(userInfo)
+                        .addOnSuccessListener(view -> {
+                            Log.d(TAG, "User information saved");
+
+                            db.collection("loginInformation").document(uid)
+                                    .set(loginInfo)
+                                    .addOnSuccessListener(view2 -> {
+                                        Log.d(TAG, "Login information saved");
+                                        completeRegistration();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.w(TAG, "Error saving login information", e);
+                                    });
                         })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error adding document", e);
-                            }
+                        .addOnFailureListener(e -> {
+                            Log.w(TAG, "Error saving user information", e);
+                            Toast.makeText(registerActivity.this, "Error saving user data", Toast.LENGTH_SHORT).show();
+                            authen.getCurrentUser().delete();
                         });
-
-
-                db.collection("loginInformation")
-                        .add(loginInfo)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error adding document", e);
-                            }
-                        });
-
-                Toast.makeText(registerActivity.this, "Account Created", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(registerActivity.this, MainActivity.class));
+            }
+            private void completeRegistration() {
+                Toast.makeText(registerActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(registerActivity.this, loginActivity.class));
+                finish();
             }
         });
 
         directLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = "test@gmail.com";
                 db.collection("loginInformation")
-                        .whereEqualTo("email", email)
+                        .whereGreaterThanOrEqualTo("email", "a@gmail.com")
+                        .whereGreaterThanOrEqualTo("email", "0@gmail.com")
+                        .whereLessThanOrEqualTo("email", "z@gmail.com")
+                        .whereGreaterThanOrEqualTo("email", "9@gmail.com")
                         .get()
                         .addOnCompleteListener(task -> {
-                            if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                                startActivity(new Intent(registerActivity.this, loginActivity.class));
+                            if (task.isSuccessful()) {
+                                if (task.getResult() != null && !task.getResult().isEmpty()) {
+                                    startActivity(new Intent(registerActivity.this, loginActivity.class));
+                                } else {
+                                    Toast.makeText(registerActivity.this,"No accounts found. Please register.",Toast.LENGTH_SHORT).show();
+                                }
                             } else {
-                                Toast.makeText(registerActivity.this, "Account not found. Please register.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(registerActivity.this,"Error checking accounts",Toast.LENGTH_SHORT).show();
                             }
                         });
             }
         });
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);

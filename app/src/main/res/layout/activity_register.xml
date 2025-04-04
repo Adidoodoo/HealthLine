@@ -1,15 +1,19 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/healthcare_blue_gradient"
-    android:padding="20dp">
+    android:padding="20dp"
+    android:fillViewport="true"
+    android:isScrollContainer="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:focusableInTouchMode="true">
 
         <TextView
             android:id="@+id/textTitle"
@@ -28,8 +32,12 @@
             android:hint="Last Name"
             android:textSize="16sp"
             android:padding="12dp"
+            android:textColor="@android:color/black"
             android:background="@android:color/white"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:nextFocusForward="@+id/inputFirstName"/>
 
         <TextView
             android:id="@+id/errorLastName"
@@ -46,8 +54,12 @@
             android:hint="First Name"
             android:textSize="16sp"
             android:padding="12dp"
+            android:textColor="@android:color/black"
             android:background="@android:color/white"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:nextFocusForward="@+id/inputMiddleName"/>
 
         <TextView
             android:id="@+id/errorFirstName"
@@ -61,11 +73,15 @@
             android:id="@+id/inputMiddleName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Middle Name (Optional)"
+            android:hint="Middle Name"
             android:textSize="16sp"
             android:padding="12dp"
+            android:textColor="@android:color/black"
             android:background="@android:color/white"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:nextFocusForward="@+id/inputAddress"/>
 
         <TextView
             android:id="@+id/errorMiddleName"
@@ -82,8 +98,12 @@
             android:hint="Address"
             android:textSize="16sp"
             android:padding="12dp"
+            android:textColor="@android:color/black"
             android:background="@android:color/white"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:nextFocusForward="@+id/inputEmail"/>
 
         <TextView
             android:id="@+id/errorAddress"
@@ -100,8 +120,12 @@
             android:hint="Email"
             android:textSize="16sp"
             android:padding="12dp"
+            android:textColor="@android:color/black"
             android:background="@android:color/white"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:nextFocusForward="@+id/inputMobileNumber"/>
 
         <TextView
             android:id="@+id/errorEmail"
@@ -118,10 +142,14 @@
             android:hint="Mobile Number"
             android:textSize="16sp"
             android:padding="12dp"
+            android:textColor="@android:color/black"
             android:background="@android:color/white"
             android:layout_marginBottom="10dp"
             android:inputType="phone"
-            android:maxLength="11"/>
+            android:maxLength="11"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:nextFocusForward="@+id/inputPassword"/>
 
         <TextView
             android:id="@+id/errorMobileNumber"
@@ -138,9 +166,13 @@
             android:hint="Password"
             android:textSize="16sp"
             android:padding="12dp"
+            android:textColor="@android:color/black"
             android:background="@android:color/white"
             android:inputType="textPassword"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:nextFocusForward="@+id/inputConfirmPassword"/>
 
         <TextView
             android:id="@+id/errorPassword"
@@ -157,9 +189,11 @@
             android:hint="Confirm Password"
             android:textSize="16sp"
             android:padding="12dp"
+            android:textColor="@android:color/black"
             android:background="@android:color/white"
             android:inputType="textPassword"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:singleLine="true"/>
 
         <TextView
             android:id="@+id/errorConfirmPassword"
@@ -189,4 +223,4 @@
             android:backgroundTint="@android:color/transparent"
             android:textColor="@android:color/white"/>
     </LinearLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

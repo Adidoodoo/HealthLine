@@ -2,7 +2,6 @@ package com.example.healthline;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -18,24 +17,21 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseAuth authen;
 
-
-    /*
     @Override
-    public void onStart(){
+    protected void onStart() {
         super.onStart();
-        FirebaseUser user = authen.getCurrentUser();
-        if(user != null){
+        FirebaseUser currentUser = authen.getCurrentUser();
+        if (currentUser != null) {
             startActivity(new Intent(MainActivity.this, homeActivity.class));
             finish();
         }
     }
 
-     */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         db = FirebaseFirestore.getInstance();
         authen = FirebaseAuth.getInstance();
 
@@ -43,25 +39,28 @@ public class MainActivity extends AppCompatActivity {
         registerButton = findViewById(R.id.buttonRegister);
 
         loginButton.setOnClickListener(view -> {
-                String email = "@gmail.com".trim();
-                db.collection("loginInformation")
-                        .whereGreaterThanOrEqualTo("email", "a@gmail.com")
-                        .whereLessThanOrEqualTo("email", "z@gmail.com")
-                        .get()
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful() && !task.getResult().isEmpty()) {
+            db.collection("loginInformation")
+                    .whereGreaterThanOrEqualTo("email", "a@gmail.com")
+                    .whereGreaterThanOrEqualTo("email", "0@gmail.com")
+                    .whereLessThanOrEqualTo("email", "z@gmail.com")
+                    .whereGreaterThanOrEqualTo("email", "9@gmail.com")
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (task.getResult() != null && !task.getResult().isEmpty()) {
                                 startActivity(new Intent(MainActivity.this, loginActivity.class));
                             } else {
-                                Toast.makeText(MainActivity.this, "Account not found. Please register.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this,"No accounts found. Please register.",Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(MainActivity.this, registerActivity.class));
                             }
-                        });
+                        } else {
+                            Toast.makeText(MainActivity.this,"Error checking accounts",Toast.LENGTH_SHORT).show();
+                        }
+                    });
         });
 
-
-
         registerButton.setOnClickListener(view -> {
-                startActivity(new Intent(MainActivity.this, registerActivity.class));
+            startActivity(new Intent(MainActivity.this, registerActivity.class));
         });
     }
 }
