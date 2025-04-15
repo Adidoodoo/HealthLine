@@ -1,0 +1,26 @@
+<resources>
+    <string-array name="hospitalsContent">
+        <item>test 1</item>
+        <item>test 2</item>
+    </string-array>
+
+    <string-array name="test1Dpts">
+        <item>Cardiology</item>
+        <item>Pediatrics</item>
+    </string-array>
+
+    <string-array name="test1Docs">
+        <item>Dr. Kwakkwak</item>
+        <item>Dr. Oten</item>
+    </string-array>
+
+    <string-array name="test2Dpts">
+        <item>Cardiology</item>
+        <item>Pediatrics</item>
+    </string-array>
+
+    <string-array name="test2Docs">
+        <item>Dr. Sins</item>
+        <item>Dr. Johnson</item>
+    </string-array>
+</resources>

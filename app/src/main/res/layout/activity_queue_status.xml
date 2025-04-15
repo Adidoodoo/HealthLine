@@ -1,0 +1,180 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/healthcare_blue_gradient"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- Hospital Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hospital:"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:padding="8dp"/>
+
+            <TextView
+                android:id="@+id/textHospital"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(Hospital Name)"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:padding="8dp"/>
+        </LinearLayout>
+
+        <!-- Department Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Department:"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:padding="8dp"/>
+
+            <TextView
+                android:id="@+id/textDepartment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(Department Name)"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:padding="8dp"/>
+        </LinearLayout>
+
+        <!-- Doctor Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Doctor:"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:padding="8dp"/>
+
+            <TextView
+                android:id="@+id/textDoctor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(Doctor Name)"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:padding="8dp"/>
+        </LinearLayout>
+
+        <!-- Queue Number Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@color/white"
+            android:layout_marginBottom="8dp"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your Queue Number"
+                android:textSize="16sp"
+                android:textColor="@color/healthcare_blue"
+                android:padding="8dp"/>
+
+            <TextView
+                android:id="@+id/textQueueNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="48sp"
+                android:textStyle="bold"
+                android:textColor="@color/healthcare_blue"/>
+        </LinearLayout>
+
+        <!-- Current Queue Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@color/white"
+            android:layout_marginBottom="20dp"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Currently Serving"
+                android:textSize="16sp"
+                android:textColor="@color/healthcare_blue"
+                android:padding="4dp"/>
+
+            <TextView
+                android:id="@+id/textCurrentQueue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:textColor="#F44336"/>
+        </LinearLayout>
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="24dp">
+
+            <!-- On the way button -->
+            <Button
+                android:id="@+id/buttonOnTheWay"
+                android:layout_width="160dp"
+                android:layout_height="48dp"
+                android:text="On The Way"
+                android:textSize="16sp"
+                android:backgroundTint="#81C784"
+                android:textColor="@color/black"
+                android:padding="8dp"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Remove queue button -->
+            <Button
+                android:id="@+id/removeQueue"
+                android:layout_width="160dp"
+                android:layout_height="48dp"
+                android:backgroundTint="#AA4A44"
+                android:text="Remove Queue"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:padding="8dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
