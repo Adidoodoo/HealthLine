@@ -16,11 +16,11 @@ import java.util.Map;
 public class queueStatusActivity extends AppCompatActivity {
 
     private TextView textHospital, textDepartment, textDoctor;
-    private TextView textQueueNumber;
+    private TextView textQueueNumber, textCurrentlyServing;
     private Button buttonOnTheWay, removeQueue;
     private FirebaseFirestore db;
     private FirebaseAuth authen;
-    private String hospitalId, queueId;
+    private String hospitalId, queueId, departmentName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,22 +31,24 @@ public class queueStatusActivity extends AppCompatActivity {
         textDepartment = findViewById(R.id.textDepartment);
         textDoctor = findViewById(R.id.textDoctor);
         textQueueNumber = findViewById(R.id.textQueueNumber);
+        textCurrentlyServing = findViewById(R.id.textCurrentQueue);
         buttonOnTheWay = findViewById(R.id.buttonOnTheWay);
         removeQueue = findViewById(R.id.removeQueue);
 
         db = FirebaseFirestore.getInstance();
         authen = FirebaseAuth.getInstance();
 
-        hospitalId = getIntent().getStringExtra("HOSPITAL_ID");
-        queueId = getIntent().getStringExtra("QUEUE_ID");
+        hospitalId = getIntent().getStringExtra("hospitalID");
+        departmentName = getIntent().getStringExtra("departmentName");
+        queueId = getIntent().getStringExtra("queueID");
 
-        if (hospitalId == null || queueId == null) {
-            Toast.makeText(this, "Invalid queue reference", Toast.LENGTH_SHORT).show();
+        if (hospitalId == null || departmentName == null || queueId == null) {
+            Toast.makeText(this, "Invalid queue", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        buttonOnTheWay.setOnClickListener(v -> updateStatus("on_the_way"));
+        buttonOnTheWay.setOnClickListener(v -> updateStatus("on the way"));
         removeQueue.setOnClickListener(v -> removeQueue());
 
         loadQueueData();
@@ -55,15 +57,20 @@ public class queueStatusActivity extends AppCompatActivity {
     private void loadQueueData() {
         db.collection("hospitalQueues")
                 .document(hospitalId)
+                .collection("departments")
+                .document(departmentName)
                 .collection("queues")
                 .document(queueId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
+                        departmentName = documentSnapshot.getString("departmentName");
                         textHospital.setText(documentSnapshot.getString("hospitalName"));
-                        textDepartment.setText(documentSnapshot.getString("departmentName"));
+                        textDepartment.setText(departmentName);
                         textDoctor.setText(documentSnapshot.getString("doctorName"));
                         textQueueNumber.setText(String.valueOf(documentSnapshot.getLong("queueNumber")));
+
+                        loadCurrentServingNumber();
                     } else {
                         Toast.makeText(this, "Queue not found", Toast.LENGTH_SHORT).show();
                         finish();
@@ -75,14 +82,34 @@ public class queueStatusActivity extends AppCompatActivity {
                 });
     }
 
-    private void updateStatus(String newStatus) {
+    private void loadCurrentServingNumber() {
+        if (departmentName != null) {
+            db.collection("hospitals")
+                    .document(hospitalId)
+                    .collection("departments")
+                    .document(departmentName)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            Long currentQueue = documentSnapshot.getLong("currentQueue");
+                            if (currentQueue != null) {
+                                textCurrentlyServing.setText(String.valueOf(currentQueue));
+                            }
+                        }
+                    });
+        }
+    }
+
+    private void updateStatus(String status) {
         db.collection("hospitalQueues")
                 .document(hospitalId)
+                .collection("departments")
+                .document(departmentName)
                 .collection("queues")
                 .document(queueId)
-                .update("status", newStatus)
+                .update("status", status)
                 .addOnSuccessListener(aVoid -> {
-                    updateGlobalQueueStatus(newStatus);
+                    updateGlobalQueueStatus(status);
                     Toast.makeText(this, "Status updated", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e ->
@@ -115,6 +142,8 @@ public class queueStatusActivity extends AppCompatActivity {
 
         DocumentReference hospitalQueueRef = db.collection("hospitalQueues")
                 .document(hospitalId)
+                .collection("departments")
+                .document(departmentName)
                 .collection("queues")
                 .document(queueId);
 
@@ -124,45 +153,37 @@ public class queueStatusActivity extends AppCompatActivity {
                     if (userDoc.exists()) {
                         String globalQueueId = userDoc.getString("activeGlobalQueueId");
 
-                        db.collection("hospitalQueues")
-                                .document(hospitalId)
-                                .collection("queues")
-                                .document(queueId)
-                                .get()
-                                .addOnSuccessListener(queueDoc -> {
-                                    if (queueDoc.exists()) {
-                                        String departmentName = queueDoc.getString("departmentName");
+                        db.runTransaction(transaction -> {
+                            if (departmentName != null) {
+                                DocumentReference deptRef = db.collection("hospitals")
+                                        .document(hospitalId)
+                                        .collection("departments")
+                                        .document(departmentName);
+                                transaction.update(deptRef, "currentQueue", FieldValue.increment(-1));
+                            }
 
-                                        db.runTransaction(transaction -> {
-                                            DocumentReference deptRef = db.collection("hospitals")
-                                                    .document(hospitalId)
-                                                    .collection("departments")
-                                                    .document(departmentName);
-                                            transaction.update(deptRef, "currentQueue", FieldValue.increment(-1));
+                            transaction.delete(hospitalQueueRef);
+                            if (globalQueueId != null) {
+                                transaction.delete(db.collection("queues").document(globalQueueId));
+                            }
 
-                                            transaction.delete(hospitalQueueRef);
-                                            if (globalQueueId != null) {
-                                                transaction.delete(db.collection("queues").document(globalQueueId));
-                                            }
+                            Map<String, Object> updates = new HashMap<>();
+                            updates.put("activeQueueId", FieldValue.delete());
+                            updates.put("activeHospitalId", FieldValue.delete());
+                            updates.put("activeGlobalQueueId", FieldValue.delete());
+                            updates.put("activeDepartmentName", FieldValue.delete());
+                            transaction.update(db.collection("userInformation").document(user.getUid()), updates);
 
-                                            Map<String, Object> updates = new HashMap<>();
-                                            updates.put("activeQueueId", FieldValue.delete());
-                                            updates.put("activeHospitalId", FieldValue.delete());
-                                            updates.put("activeGlobalQueueId", FieldValue.delete());
-                                            transaction.update(db.collection("userInformation").document(user.getUid()), updates);
-
-                                            return null;
-                                        }).addOnCompleteListener(task -> {
-                                            if (task.isSuccessful()) {
-                                                Toast.makeText(this, "Queue removed", Toast.LENGTH_SHORT).show();
-                                                finish();
-                                            } else {
-                                                Toast.makeText(this, "Removal failed: " + task.getException().getMessage(),
-                                                        Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    }
-                                });
+                            return null;
+                        }).addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(this, "Queue removed", Toast.LENGTH_SHORT).show();
+                                finish();
+                            } else {
+                                Toast.makeText(this, "Removal failed: " + task.getException().getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 });
     }

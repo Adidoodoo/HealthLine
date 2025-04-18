@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.widget.NestedScrollView;
 
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +28,7 @@ import java.util.Map;
 
 public class registerActivity extends AppCompatActivity {
 
+    private NestedScrollView view;
     private EditText inputLastName, inputFirstName, inputMiddleName, inputAddress, inputEmail, inputMobileNumber, inputPassword, inputConfirmPassword;
     private TextView errorLastName, errorFirstName, errorMiddleName, errorAddress, errorEmail, errorMobileNumber, errorPassword, errorConfirmPassword;
     private Button register, directLogin;
@@ -40,6 +42,7 @@ public class registerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
+        view = findViewById(R.id.main);
 
         inputLastName = findViewById(R.id.inputLastName);
         inputFirstName = findViewById(R.id.inputFirstName);
@@ -64,6 +67,7 @@ public class registerActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         authen = FirebaseAuth.getInstance();
+
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,7 +153,7 @@ public class registerActivity extends AppCompatActivity {
                                 }
                             } else {
                                 Toast.makeText(registerActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                Log.w(TAG, "fail", task.getException());
                             }
                         });
             }
@@ -195,6 +199,7 @@ public class registerActivity extends AppCompatActivity {
             }
             private void completeRegistration() {
                 Toast.makeText(registerActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
+                authen.signOut();
                 startActivity(new Intent(registerActivity.this, loginActivity.class));
                 finish();
             }

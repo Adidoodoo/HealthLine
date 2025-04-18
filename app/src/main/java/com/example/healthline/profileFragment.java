@@ -2,6 +2,7 @@ package com.example.healthline;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -21,7 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class profileFragment extends Fragment {
 
     private TextView nameDisplay, emailDisplay, mobNumDisplay;
-    private Button logoutButton;
+    private Button logoutButton, deleteAccountButton;
     private FirebaseFirestore db;
     private FirebaseAuth authen;
 
@@ -31,6 +36,7 @@ public class profileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         logoutButton = view.findViewById(R.id.buttonLogout);
+        deleteAccountButton = view.findViewById(R.id.buttonDeleteAccount);
         nameDisplay = view.findViewById(R.id.textFullName);
         emailDisplay = view.findViewById(R.id.textEmail);
         mobNumDisplay = view.findViewById(R.id.textMobileNumber);
@@ -54,6 +60,12 @@ public class profileFragment extends Fragment {
             getActivity().finish();
         });
 
+        deleteAccountButton.setOnClickListener(v -> {
+            if (currentUser != null) {
+                deleteAccount(currentUser);
+            }
+        });
+
         return view;
     }
 
@@ -71,10 +83,8 @@ public class profileFragment extends Fragment {
                             String mobile = document.getString("mobileNumber");
                             String email = document.getString("email");
 
-                            firstName = firstName != null ? firstName : "";
-                            lastName = lastName != null ? lastName : "";
                             middleName = middleName != null ? " " + middleName : "";
-                            mobile = mobile != null ? mobile : "Not provided";
+
 
                             String fullName = lastName + ", " + firstName + middleName;
                             nameDisplay.setText(fullName);
@@ -90,6 +100,56 @@ public class profileFragment extends Fragment {
                         nameDisplay.setText("Error loading data");
                         Toast.makeText(getActivity(),
                                 "Failed to load profile: " + task.getException().getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void deleteAccount(FirebaseUser user) {
+        db.collection("userInformation").document(user.getUid())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void a) {
+                        user.delete()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            db.collection("loginInformation").document(user.getUid())
+                                                    .delete()
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void b) {
+                                                            Toast.makeText(getActivity(),
+                                                                    "Account deleted successfully",
+                                                                    Toast.LENGTH_SHORT).show();
+                                                            startActivity(new Intent(getActivity(), MainActivity.class));
+                                                            getActivity().finish();
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Toast.makeText(getActivity(),
+                                                                    "Failed to delete user data: " + e.getMessage(),
+                                                                    Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+                                        } else {
+                                            Toast.makeText(getActivity(),
+                                                    "Failed to delete account: " + (task.getException() != null ? task.getException().getMessage() : "Unknown error"),
+                                                    Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(),
+                                "Failed to delete user data: " + e.getMessage(),
                                 Toast.LENGTH_SHORT).show();
                     }
                 });

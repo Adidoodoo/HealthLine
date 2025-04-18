@@ -74,8 +74,7 @@ public class queueUpActivity extends AppCompatActivity {
         checkExistingQueue(userId, hospitalName, departmentName, comments);
     }
 
-    private void checkExistingQueue(String userId, String hospitalName,
-                                    String departmentName, String comments) {
+    private void checkExistingQueue(String userId, String hospitalName, String departmentName, String comments) {
         db.collection("userInformation").document(userId)
                 .get()
                 .addOnSuccessListener(userDoc -> {
@@ -162,15 +161,14 @@ public class queueUpActivity extends AppCompatActivity {
 
     private void processQueueCreation(DocumentSnapshot deptDoc, String hospitalId, String userId, String fullName, String hospitalName, String departmentName, String comments) {
         String doctorName = deptDoc.getString("doctorName");
-        long currentQueue = deptDoc.getLong("currentQueue") != null ?
-                deptDoc.getLong("currentQueue") : 20;
+        long currentQueue = deptDoc.getLong("currentQueue") != null ? deptDoc.getLong("currentQueue") : 20;
 
         Map<String, Object> queueData = new HashMap<>();
         queueData.put("patientName", fullName);
         queueData.put("hospitalName", hospitalName);
         queueData.put("departmentName", departmentName);
         queueData.put("doctorName", doctorName);
-        queueData.put("queueNumber", currentQueue + 1);
+        queueData.put("queueNumber", currentQueue + 20);
         queueData.put("status", "waiting");
         queueData.put("timestamp", FieldValue.serverTimestamp());
         queueData.put("userId", userId);
@@ -180,7 +178,8 @@ public class queueUpActivity extends AppCompatActivity {
             transaction.update(deptDoc.getReference(), "currentQueue", currentQueue + 1);
 
             DocumentReference hospitalQueueRef = db.collection("hospitalQueues").document(hospitalId);
-            DocumentReference newQueueRef = hospitalQueueRef.collection("queues").document();
+            DocumentReference departmentQueueRef = hospitalQueueRef.collection("departments").document(departmentName);
+            DocumentReference newQueueRef = departmentQueueRef.collection("queues").document();
             transaction.set(newQueueRef, queueData);
 
             DocumentReference globalQueueRef = db.collection("queues").document();
@@ -189,6 +188,7 @@ public class queueUpActivity extends AppCompatActivity {
             Map<String, Object> updateData = new HashMap<>();
             updateData.put("activeQueueId", newQueueRef.getId());
             updateData.put("activeHospitalId", hospitalId);
+            updateData.put("activeDepartmentName", departmentName);
             updateData.put("activeGlobalQueueId", globalQueueRef.getId());
             transaction.update(db.collection("userInformation").document(userId), updateData);
 
@@ -196,14 +196,10 @@ public class queueUpActivity extends AppCompatActivity {
         }).addOnCompleteListener(task -> {
             showLoading(false);
             if (task.isSuccessful()) {
-                Toast.makeText(this,
-                        "Your queue number is: " + task.getResult(),
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Queue successful!", Toast.LENGTH_LONG).show();
                 redirectToQueueStatus();
             } else {
-                Toast.makeText(this,
-                        "Error: " + task.getException().getMessage(),
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

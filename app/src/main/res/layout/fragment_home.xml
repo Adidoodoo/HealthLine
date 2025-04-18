@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@color/healthcare_blue_gradient"
+    android:background="@drawable/background"
     android:padding="20dp">
 
     <Button
@@ -12,15 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Queue Up"
-        android:backgroundTint="@color/healthcare_blue"
-        android:textColor="@color/white"
+        android:backgroundTint="@android:color/white"
+        android:textColor="@color/healthcare_blue"
         android:layout_marginBottom="16dp"/>
 
     <Button
         android:id="@+id/buttonQueueStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/healthcare_blue"
-        android:textColor="@color/white"
+        android:backgroundTint="@android:color/white"
+        android:textColor="@color/healthcare_blue"
         android:text="Queue Status"/>
 </LinearLayout>

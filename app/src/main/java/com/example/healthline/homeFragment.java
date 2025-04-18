@@ -54,10 +54,7 @@ public class homeFragment extends Fragment {
                     if (task.isSuccessful() && task.getResult() != null) {
                         DocumentSnapshot doc = task.getResult();
                         if (doc.exists() && doc.contains("activeQueueId") && doc.contains("activeHospitalId")) {
-                            startQueueStatusActivity(
-                                    doc.getString("activeHospitalId"),
-                                    doc.getString("activeQueueId")
-                            );
+                            startQueueStatusActivity(doc.getString("activeHospitalId"), doc.getString("activeDepartmentName"), doc.getString("activeQueueId"));
                         } else {
                             Toast.makeText(getActivity(), "No active queue found", Toast.LENGTH_SHORT).show();
                         }
@@ -67,9 +64,10 @@ public class homeFragment extends Fragment {
                 });
     }
 
-    private void startQueueStatusActivity(String hospitalId, String queueId) {
+    private void startQueueStatusActivity(String hospitalId, String departmentName, String queueId) {
         startActivity(new Intent(getActivity(), queueStatusActivity.class)
-                .putExtra("HOSPITAL_ID", hospitalId)
-                .putExtra("QUEUE_ID", queueId));
+                .putExtra("hospitalID", hospitalId)
+                .putExtra("departmentName", departmentName)
+                .putExtra("queueID", queueId));
     }
 }

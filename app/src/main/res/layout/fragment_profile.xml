@@ -2,59 +2,109 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:background="@color/healthcare_blue_gradient"
-    android:padding="16dp">
+    android:gravity="center_horizontal"
+    android:background="@drawable/background"
+    android:padding="24dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="20dp"
         android:text="User Profile"
         android:textColor="@android:color/white"
-        android:textSize="26sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textFullName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Username"
-        android:textSize="18sp"
+        android:textSize="28sp"
         android:textStyle="bold"
-        android:textColor="@android:color/white"
-        android:textAlignment="center"
-        android:gravity="center"/>
+        android:layout_marginBottom="120dp"/>
 
-    <TextView
-        android:id="@+id/textEmail"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Email"
-        android:textSize="16sp"
-        android:textColor="@android:color/white"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:layout_marginTop="8dp"/>
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:elevation="8dp"
+        android:layout_marginBottom="100dp">
 
-    <TextView
-        android:id="@+id/textMobileNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mobile Number"
-        android:textSize="16sp"
-        android:textColor="@android:color/white"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:layout_marginTop="8dp"/>
+        <TextView
+            android:id="@+id/textFullName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="John Doe"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="16dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/email"
+                />
+
+            <TextView
+                android:id="@+id/textEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="john.doe@example.com"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginStart="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/phone"
+                />
+
+            <TextView
+                android:id="@+id/textMobileNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="09154443332"
+                android:maxLength="11"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginStart="16dp"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <Button
         android:id="@+id/buttonLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/healthcare_blue"
-        android:textColor="@android:color/white"
+        android:layout_width="200dp"
+        android:layout_height="48dp"
+        android:backgroundTint="@android:color/white"
+        android:textColor="@color/healthcare_blue"
         android:text="Logout"
-        android:layout_marginTop="16dp"/>
+        android:textSize="16sp"
+        android:textAllCaps="false"
+        android:layout_marginBottom="16dp"
+        android:elevation="4dp"/>
 
+    <Button
+        android:id="@+id/buttonDeleteAccount"
+        android:layout_width="200dp"
+        android:layout_height="48dp"
+        android:backgroundTint="@android:color/holo_red_light"
+        android:textColor="@android:color/white"
+        android:text="Delete Account"
+        android:textSize="16sp"
+        android:textAllCaps="false"
+        android:elevation="4dp"/>
 </LinearLayout>
