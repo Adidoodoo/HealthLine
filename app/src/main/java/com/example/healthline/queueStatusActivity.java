@@ -62,13 +62,13 @@ public class queueStatusActivity extends AppCompatActivity {
                 .collection("queues")
                 .document(queueId)
                 .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        departmentName = documentSnapshot.getString("departmentName");
-                        textHospital.setText(documentSnapshot.getString("hospitalName"));
+                .addOnSuccessListener(v -> {
+                    if (v.exists()) {
+                        departmentName = v.getString("departmentName");
+                        textHospital.setText(v.getString("hospitalName"));
                         textDepartment.setText(departmentName);
-                        textDoctor.setText(documentSnapshot.getString("doctorName"));
-                        textQueueNumber.setText(String.valueOf(documentSnapshot.getLong("queueNumber")));
+                        textDoctor.setText(v.getString("doctorName"));
+                        textQueueNumber.setText(String.valueOf(v.getLong("queueNumber")));
 
                         loadCurrentServingNumber();
                     } else {
@@ -89,9 +89,9 @@ public class queueStatusActivity extends AppCompatActivity {
                     .collection("departments")
                     .document(departmentName)
                     .get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            Long currentQueue = documentSnapshot.getLong("currentQueue");
+                    .addOnSuccessListener(v -> {
+                        if (v.exists()) {
+                            Long currentQueue = v.getLong("currentQueue");
                             if (currentQueue != null) {
                                 textCurrentlyServing.setText(String.valueOf(currentQueue));
                             }
@@ -108,7 +108,7 @@ public class queueStatusActivity extends AppCompatActivity {
                 .collection("queues")
                 .document(queueId)
                 .update("status", status)
-                .addOnSuccessListener(aVoid -> {
+                .addOnSuccessListener(v -> {
                     updateGlobalQueueStatus(status);
                     Toast.makeText(this, "Status updated", Toast.LENGTH_SHORT).show();
                 })
@@ -121,9 +121,9 @@ public class queueStatusActivity extends AppCompatActivity {
         if (user != null) {
             db.collection("userInformation").document(user.getUid())
                     .get()
-                    .addOnSuccessListener(userDoc -> {
-                        if (userDoc.exists()) {
-                            String globalQueueId = userDoc.getString("activeGlobalQueueId");
+                    .addOnSuccessListener(v -> {
+                        if (v.exists()) {
+                            String globalQueueId = v.getString("activeGlobalQueueId");
                             if (globalQueueId != null) {
                                 db.collection("queues").document(globalQueueId)
                                         .update("status", newStatus);
@@ -149,9 +149,9 @@ public class queueStatusActivity extends AppCompatActivity {
 
         db.collection("userInformation").document(user.getUid())
                 .get()
-                .addOnSuccessListener(userDoc -> {
-                    if (userDoc.exists()) {
-                        String globalQueueId = userDoc.getString("activeGlobalQueueId");
+                .addOnSuccessListener(v -> {
+                    if (v.exists()) {
+                        String globalQueueId = v.getString("activeGlobalQueueId");
 
                         db.runTransaction(transaction -> {
                             if (departmentName != null) {

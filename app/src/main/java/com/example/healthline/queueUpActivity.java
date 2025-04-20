@@ -1,8 +1,10 @@
 package com.example.healthline;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -176,17 +178,24 @@ public class queueUpActivity extends AppCompatActivity {
 
         db.runTransaction(transaction -> {
             transaction.update(deptDoc.getReference(), "currentQueue", currentQueue + 1);
-
+/*
             DocumentReference hospitalQueueRef = db.collection("hospitalQueues").document(hospitalId);
             DocumentReference departmentQueueRef = hospitalQueueRef.collection("departments").document(departmentName);
             DocumentReference newQueueRef = departmentQueueRef.collection("queues").document();
-            transaction.set(newQueueRef, queueData);
+
+ */
+
+            DocumentReference queueRef = db.collection("hospitalQueues").document(hospitalId)
+                            .collection("departments").document(departmentName)
+                            .collection("queues").document();
+
+            transaction.set(queueRef, queueData);
 
             DocumentReference globalQueueRef = db.collection("queues").document();
             transaction.set(globalQueueRef, queueData);
 
             Map<String, Object> updateData = new HashMap<>();
-            updateData.put("activeQueueId", newQueueRef.getId());
+            updateData.put("activeQueueId", queueRef.getId());
             updateData.put("activeHospitalId", hospitalId);
             updateData.put("activeDepartmentName", departmentName);
             updateData.put("activeGlobalQueueId", globalQueueRef.getId());
@@ -282,6 +291,18 @@ public class queueUpActivity extends AppCompatActivity {
     }
 
     private void showLoading(boolean show) {
-        progressOverlay.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (show) {
+            Dialog progressDialog = new Dialog(this);
+            progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            progressDialog.setContentView(R.layout.loading_progressbar);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+            progressOverlay.setTag(progressDialog);
+        } else {
+            Dialog progressDialog = (Dialog) progressOverlay.getTag();
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+        }
     }
 }

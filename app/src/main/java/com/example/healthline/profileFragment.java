@@ -1,11 +1,14 @@
 package com.example.healthline;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,16 +57,11 @@ public class profileFragment extends Fragment {
         }
 
         logoutButton.setOnClickListener(v -> {
-            authen.signOut();
-            Toast.makeText(getActivity(), "Logout Successful", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(getActivity(), MainActivity.class));
-            getActivity().finish();
+            showLogoutDialog();
         });
 
         deleteAccountButton.setOnClickListener(v -> {
-            if (currentUser != null) {
-                deleteAccount(currentUser);
-            }
+            showDeleteAccountDialog();
         });
 
         return view;
@@ -153,5 +151,74 @@ public class profileFragment extends Fragment {
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void showLogoutDialog() {
+        Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.logout_warning);
+        dialog.setCancelable(true);
+
+        Button btnCancel = dialog.findViewById(R.id.btnCancel);
+        Button btnConfirm = dialog.findViewById(R.id.btnLogout);
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+        btnConfirm.setOnClickListener(v -> {
+            dialog.dismiss();
+            showLogoutProgress();
+        });
+
+        dialog.show();
+    }
+
+    private void showLogoutProgress() {
+        Dialog progressDialog = new Dialog(requireContext());
+        progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        progressDialog.setContentView(R.layout.logging_out_progressbar);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        new Handler().postDelayed(() -> {
+            progressDialog.dismiss();
+            performLogout();
+        }, 1500);
+    }
+
+    private void performLogout(){
+        authen.signOut();
+        Toast.makeText(getActivity(), "Logout Successful", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(getActivity(), MainActivity.class));
+        getActivity().finish();
+    }
+
+    private void showDeleteAccountDialog() {
+        Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.delete_account_warning);
+        dialog.setCancelable(true);
+
+        Button btnCancel = dialog.findViewById(R.id.btnCancel);
+        Button btnConfirm = dialog.findViewById(R.id.btnDelete);
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+        btnConfirm.setOnClickListener(v -> {
+            dialog.dismiss();
+            showDeleteAccountProgress();
+        });
+
+        dialog.show();
+    }
+
+    private void showDeleteAccountProgress() {
+        Dialog progressDialog = new Dialog(requireContext());
+        progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        progressDialog.setContentView(R.layout.deleting_account_progressbar);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        FirebaseUser currentUser = authen.getCurrentUser();
+        if (currentUser != null) {
+            deleteAccount(currentUser);
+        }
     }
 }
