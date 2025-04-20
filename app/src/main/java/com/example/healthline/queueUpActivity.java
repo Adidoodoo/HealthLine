@@ -178,12 +178,6 @@ public class queueUpActivity extends AppCompatActivity {
 
         db.runTransaction(transaction -> {
             transaction.update(deptDoc.getReference(), "currentQueue", currentQueue + 1);
-/*
-            DocumentReference hospitalQueueRef = db.collection("hospitalQueues").document(hospitalId);
-            DocumentReference departmentQueueRef = hospitalQueueRef.collection("departments").document(departmentName);
-            DocumentReference newQueueRef = departmentQueueRef.collection("queues").document();
-
- */
 
             DocumentReference queueRef = db.collection("hospitalQueues").document(hospitalId)
                             .collection("departments").document(departmentName)

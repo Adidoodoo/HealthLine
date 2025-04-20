@@ -54,7 +54,21 @@ public class loginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = authen.getCurrentUser();
                         if (user != null) {
-                            verifyUser(user.getUid(), email);
+                            db.collection("userInformation").document(user.getUid())
+                                    .get()
+                                    .addOnCompleteListener(userTask -> {
+                                        if (userTask.isSuccessful() && userTask.getResult().exists()) {
+                                            db.collection("loginInformation").document(user.getUid())
+                                                    .get()
+                                                    .addOnCompleteListener(loginTask -> {
+                                                        if (loginTask.isSuccessful() && loginTask.getResult().exists()) {
+                                                            navigateToHome(email);
+                                                        }else {
+                                                            Toast.makeText(loginActivity.this, "Invalid credentials",Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+                                        }
+                                    });
                         }
                     } else {
                         checkEmailExists(email);
@@ -62,23 +76,6 @@ public class loginActivity extends AppCompatActivity {
                 });
     }
 
-    private void verifyUser(String uid, String email) {
-        db.collection("userInformation").document(uid)
-                .get()
-                .addOnCompleteListener(userTask -> {
-                    if (userTask.isSuccessful() && userTask.getResult().exists()) {
-                        db.collection("loginInformation").document(uid)
-                                .get()
-                                .addOnCompleteListener(loginTask -> {
-                                    if (loginTask.isSuccessful() && loginTask.getResult().exists()) {
-                                        navigateToHome(email);
-                                    }else {
-                                        Toast.makeText(loginActivity.this, "Invalid credentials",Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                    }
-                });
-    }
 
     private void checkEmailExists(String email) {
         db.collection("loginInformation")

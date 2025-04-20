@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,10 +14,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.core.widget.NestedScrollView;
+
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,7 +25,6 @@ import java.util.Map;
 
 public class registerActivity extends AppCompatActivity {
 
-    private NestedScrollView view;
     private EditText inputLastName, inputFirstName, inputMiddleName, inputAddress, inputEmail,
             inputMobileNumber, inputPassword, inputConfirmPassword;
     private TextView errorLastName, errorFirstName, errorMiddleName, errorAddress, errorEmail,
@@ -44,24 +39,40 @@ public class registerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
-        view = findViewById(R.id.main);
 
         initializeViews();
         db = FirebaseFirestore.getInstance();
         authen = FirebaseAuth.getInstance();
 
         register.setOnClickListener(view -> {
-            if (validateInputs()) {
-                showLoadingDialog();
+            if (inputsValid()) {
+                loading();
                 register.setEnabled(false);
                 directLogin.setEnabled(false);
                 authenUser();
             }
         });
 
-        directLogin.setOnClickListener(view -> navigateToLogin());
-
-        setupWindowInsets();
+        directLogin.setOnClickListener(v -> {
+            db.collection("loginInformation")
+                    .whereGreaterThanOrEqualTo("email", "a@gmail.com")
+                    .whereGreaterThanOrEqualTo("email", "0@gmail.com")
+                    .whereLessThanOrEqualTo("email", "z@gmail.com")
+                    .whereGreaterThanOrEqualTo("email", "9@gmail.com")
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (task.getResult() != null && !task.getResult().isEmpty()) {
+                                startActivity(new Intent(this, loginActivity.class));
+                            } else {
+                                Toast.makeText(this,"No accounts found. Please register.",Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(this, registerActivity.class));
+                            }
+                        } else {
+                            Toast.makeText(this,"Error checking accounts",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                });
     }
 
     private void initializeViews() {
@@ -87,9 +98,9 @@ public class registerActivity extends AppCompatActivity {
         directLogin = findViewById(R.id.buttonLoginRedirect);
     }
 
-    private boolean validateInputs() {
+    private boolean inputsValid() {
         boolean isValid = true;
-        clearErrorMessages();
+        clearErrors();
 
         if (inputFirstName.getText().toString().trim().isEmpty()) {
             errorFirstName.setText(getString(R.string.error_blank_field));
@@ -147,7 +158,7 @@ public class registerActivity extends AppCompatActivity {
         return isValid;
     }
 
-    private void clearErrorMessages() {
+    private void clearErrors() {
         errorLastName.setText("");
         errorFirstName.setText("");
         errorMiddleName.setText("");
@@ -158,7 +169,7 @@ public class registerActivity extends AppCompatActivity {
         errorConfirmPassword.setText("");
     }
 
-    private void showLoadingDialog() {
+    private void loading() {
         loadingDialog = new Dialog(this);
         loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         loadingDialog.setContentView(R.layout.loading_progressbar);
@@ -167,7 +178,7 @@ public class registerActivity extends AppCompatActivity {
         loadingDialog.show();
     }
 
-    private void hideLoadingDialog() {
+    private void hideLoading() {
         if (loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
         }
@@ -185,7 +196,7 @@ public class registerActivity extends AppCompatActivity {
                             registerUser(user.getUid(), email);
                         }
                     } else {
-                        hideLoadingDialog();
+                        hideLoading();
                         enableButtons();
                         Toast.makeText(registerActivity.this,
                                 "Registration failed: " + task.getException().getMessage(),
@@ -217,20 +228,20 @@ public class registerActivity extends AppCompatActivity {
                     db.collection("loginInformation").document(uid)
                             .set(loginInfo)
                             .addOnSuccessListener(view2 -> {
-                                hideLoadingDialog();
+                                hideLoading();
                                 completeRegistration();
                             })
                             .addOnFailureListener(e -> {
-                                handleRegistrationFailure(uid, e);
+                                deleteIfRegFailed(e);
                             });
                 })
                 .addOnFailureListener(e -> {
-                    handleRegistrationFailure(uid, e);
+                    deleteIfRegFailed(e);
                 });
     }
 
-    private void handleRegistrationFailure(String uid, Exception e) {
-        hideLoadingDialog();
+    private void deleteIfRegFailed(Exception e) {
+        hideLoading();
         enableButtons();
         Log.w("REGISTRATION", "Error saving data", e);
         Toast.makeText(this, "Error saving user data", Toast.LENGTH_SHORT).show();
@@ -251,17 +262,5 @@ public class registerActivity extends AppCompatActivity {
     private void enableButtons() {
         register.setEnabled(true);
         directLogin.setEnabled(true);
-    }
-
-    private void navigateToLogin() {
-        startActivity(new Intent(this, loginActivity.class));
-    }
-
-    private void setupWindowInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
     }
 }

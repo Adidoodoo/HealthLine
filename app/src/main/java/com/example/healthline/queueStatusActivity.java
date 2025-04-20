@@ -1,6 +1,9 @@
 package com.example.healthline;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,7 +52,7 @@ public class queueStatusActivity extends AppCompatActivity {
         }
 
         buttonOnTheWay.setOnClickListener(v -> updateStatus("on the way"));
-        removeQueue.setOnClickListener(v -> removeQueue());
+        removeQueue.setOnClickListener(v -> removeQueueDialogue());
 
         loadQueueData();
     }
@@ -131,6 +134,38 @@ public class queueStatusActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+
+    private void removeQueueDialogue() {
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.remove_queue_warning);
+        dialog.setCancelable(true);
+
+        Button btnCancel = dialog.findViewById(R.id.btnCancel);
+        Button btnRemove = dialog.findViewById(R.id.btnRemove);
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+        btnRemove.setOnClickListener(v -> {
+            dialog.dismiss();
+            removeQueueProgress();
+        });
+
+        dialog.show();
+    }
+
+    private void removeQueueProgress() {
+        Dialog progressDialog = new Dialog(this);
+        progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        progressDialog.setContentView(R.layout.remove_queue_progressbar);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        new Handler().postDelayed(() -> {
+            removeQueue();
+            progressDialog.dismiss();
+        }, 1000);
     }
 
     private void removeQueue() {

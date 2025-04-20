@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,11 +56,11 @@ public class profileFragment extends Fragment {
         }
 
         logoutButton.setOnClickListener(v -> {
-            showLogoutDialog();
+            logoutDialog();
         });
 
         deleteAccountButton.setOnClickListener(v -> {
-            showDeleteAccountDialog();
+            deleteAccountDialog();
         });
 
         return view;
@@ -109,8 +108,7 @@ public class profileFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void a) {
-                        user.delete()
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
@@ -153,7 +151,7 @@ public class profileFragment extends Fragment {
                 });
     }
 
-    private void showLogoutDialog() {
+    private void logoutDialog() {
         Dialog dialog = new Dialog(requireContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.logout_warning);
@@ -165,13 +163,13 @@ public class profileFragment extends Fragment {
         btnCancel.setOnClickListener(v -> dialog.dismiss());
         btnConfirm.setOnClickListener(v -> {
             dialog.dismiss();
-            showLogoutProgress();
+            logoutProgress();
         });
 
         dialog.show();
     }
 
-    private void showLogoutProgress() {
+    private void logoutProgress() {
         Dialog progressDialog = new Dialog(requireContext());
         progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         progressDialog.setContentView(R.layout.logging_out_progressbar);
@@ -191,7 +189,7 @@ public class profileFragment extends Fragment {
         getActivity().finish();
     }
 
-    private void showDeleteAccountDialog() {
+    private void deleteAccountDialog() {
         Dialog dialog = new Dialog(requireContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.delete_account_warning);
@@ -203,13 +201,13 @@ public class profileFragment extends Fragment {
         btnCancel.setOnClickListener(v -> dialog.dismiss());
         btnConfirm.setOnClickListener(v -> {
             dialog.dismiss();
-            showDeleteAccountProgress();
+            deleteAccountProgress();
         });
 
         dialog.show();
     }
 
-    private void showDeleteAccountProgress() {
+    private void deleteAccountProgress() {
         Dialog progressDialog = new Dialog(requireContext());
         progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         progressDialog.setContentView(R.layout.deleting_account_progressbar);

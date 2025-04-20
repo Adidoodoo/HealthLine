@@ -1,7 +1,9 @@
 package com.example.healthline;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -24,8 +26,28 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser != null) {
             startActivity(new Intent(MainActivity.this, homeActivity.class));
             finish();
+            /*
+        }else{
+            hospitalAlert();
+        }
+
+             */
         }
     }
+    /*
+    protected void hospitalAlert(){
+        Dialog notice = new Dialog(this);
+        notice.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        notice.setContentView(R.layout.available_hospitals_warning);
+        notice.setCancelable(true);
+
+        Button yes = notice.findViewById(R.id.btnUnderstand);
+        yes.setOnClickListener(v -> {notice.dismiss();});
+
+        notice.show();
+    }
+
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
