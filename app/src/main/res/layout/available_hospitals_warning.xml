@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     app:cardCornerRadius="12dp"
     app:cardElevation="8dp"
-    app:cardUseCompatPadding="true">
+    app:cardBackgroundColor="#FFFFFF">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -21,6 +21,7 @@
             android:text="Supported Hospitals"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:textColor="#2E7D32"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,6 +33,7 @@
             android:layout_height="wrap_content"
             android:text="This application is currently available at the following hospitals:"
             android:textSize="16sp"
+            android:textColor="#000000"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -54,9 +56,8 @@
             android:layout_height="wrap_content"
             android:text="Yes, I understand"
             android:layout_marginTop="24dp"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:textColor="@android:color/white"
-            app:backgroundTint="?attr/colorPrimary"
+            android:backgroundTint="#2E7D32"
+            android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/hospitals_container"/>

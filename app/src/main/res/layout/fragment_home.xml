@@ -1,26 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/background"
-    android:padding="20dp">
+    android:background="#FFFFFF"
+    android:padding="24dp">
 
     <Button
         android:id="@+id/buttonQueueUp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
         android:text="Queue Up"
-        android:backgroundTint="@android:color/white"
-        android:textColor="@color/healthcare_blue"
+        android:backgroundTint="#2E7D32"
+        android:textColor="#FFFFFF"
         android:layout_marginBottom="16dp"/>
 
     <Button
         android:id="@+id/buttonQueueStatus"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/white"
-        android:textColor="@color/healthcare_blue"
-        android:text="Queue Status"/>
+        android:layout_height="52dp"
+        android:text="Queue Status"
+        android:backgroundTint="#FFFFFF"
+        android:textColor="#2E7D32"
+        android:strokeColor="#2E7D32"
+        android:strokeWidth="1"/>
 </LinearLayout>

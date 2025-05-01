@@ -3,7 +3,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="#FFFFFF"
     android:fillViewport="true"
     android:padding="24dp">
 
@@ -39,7 +39,7 @@
                         android:text="Hospital:"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@color/black"/>
+                        android:textColor="#2E7D32"/>
 
                     <TextView
                         android:id="@+id/textHospital"
@@ -48,7 +48,7 @@
                         android:layout_weight="2"
                         android:text="(Hospital Name)"
                         android:textSize="16sp"
-                        android:textColor="@color/black"
+                        android:textColor="#000000"
                         android:textAlignment="textEnd"/>
                 </LinearLayout>
 
@@ -65,7 +65,7 @@
                         android:text="Department:"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@color/black"/>
+                        android:textColor="#2E7D32"/>
 
                     <TextView
                         android:id="@+id/textDepartment"
@@ -74,7 +74,7 @@
                         android:layout_weight="2"
                         android:text="(Department Name)"
                         android:textSize="16sp"
-                        android:textColor="@color/black"
+                        android:textColor="#000000"
                         android:textAlignment="textEnd"/>
                 </LinearLayout>
 
@@ -90,7 +90,7 @@
                         android:text="Doctor:"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@color/black"/>
+                        android:textColor="#2E7D32"/>
 
                     <TextView
                         android:id="@+id/textDoctor"
@@ -99,7 +99,7 @@
                         android:layout_weight="2"
                         android:text="(Doctor Name)"
                         android:textSize="16sp"
-                        android:textColor="@color/black"
+                        android:textColor="#000000"
                         android:textAlignment="textEnd"/>
                 </LinearLayout>
             </LinearLayout>
@@ -118,14 +118,14 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:padding="24dp"
-                android:background="@color/white">
+                android:background="#FFFFFF">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Your Queue Number"
                     android:textSize="18sp"
-                    android:textColor="@color/healthcare_blue"
+                    android:textColor="#2E7D32"
                     android:layout_marginBottom="8dp"/>
 
                 <TextView
@@ -135,7 +135,7 @@
                     android:text="0"
                     android:textSize="56sp"
                     android:textStyle="bold"
-                    android:textColor="@color/healthcare_blue"/>
+                    android:textColor="#2E7D32"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -152,14 +152,14 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:padding="24dp"
-                android:background="@color/white">
+                android:background="#FFFFFF">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Currently Serving"
                     android:textSize="18sp"
-                    android:textColor="@color/healthcare_blue"
+                    android:textColor="#2E7D32"
                     android:layout_marginBottom="8dp"/>
 
                 <TextView
@@ -169,29 +169,31 @@
                     android:text="20"
                     android:textSize="48sp"
                     android:textStyle="bold"
-                    android:textColor="#F44336"/>
+                    android:textColor="#D32F2F"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <Button
             android:id="@+id/buttonOnTheWay"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
             android:layout_height="52dp"
             android:text="On The Way"
             android:textSize="18sp"
-            android:backgroundTint="@android:color/holo_green_dark"
-            android:textColor="@android:color/white"
+            android:backgroundTint="#2E7D32"
+            android:textColor="#FFFFFF"
             android:layout_marginBottom="16dp"
             android:stateListAnimator="@null"/>
 
         <Button
             android:id="@+id/removeQueue"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
             android:layout_height="52dp"
             android:text="Remove Queue"
             android:textSize="18sp"
-            android:backgroundTint="@android:color/holo_red_light"
-            android:textColor="@android:color/black"
+            android:backgroundTint="#FFFFFF"
+            android:textColor="#D32F2F"
+            android:strokeColor="#D32F2F"
+            android:strokeWidth="1"
             android:stateListAnimator="@null"/>
     </LinearLayout>
 </ScrollView>

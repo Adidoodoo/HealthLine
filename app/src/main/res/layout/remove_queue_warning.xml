@@ -2,13 +2,12 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     app:cardCornerRadius="12dp"
     app:cardElevation="8dp"
-    app:cardUseCompatPadding="true">
+    app:cardBackgroundColor="#FFFFFF">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -22,6 +21,7 @@
             android:text="Remove Queue"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:textColor="#2E7D32"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:text="Are you sure you want to remove your current queue?"
             android:textSize="16sp"
+            android:textColor="#000000"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -54,16 +55,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cancel"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:textColor="?attr/colorPrimary"/>
+                android:textColor="#2E7D32"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
 
             <Button
                 android:id="@+id/btnRemove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Remove"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:textColor="@android:color/holo_red_dark"/>
+                android:textColor="#D32F2F"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

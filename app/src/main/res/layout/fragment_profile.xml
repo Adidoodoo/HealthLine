@@ -1,44 +1,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:background="@drawable/background"
+    android:background="#FFFFFF"
     android:padding="24dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="User Profile"
-        android:textColor="@android:color/white"
+        android:textColor="#2E7D32"
         android:textSize="28sp"
         android:textStyle="bold"
-        android:layout_marginBottom="120dp"/>
+        android:layout_marginBottom="32dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp"
+        android:background="#FFFFFF"
         android:elevation="8dp"
-        android:layout_marginBottom="100dp">
+        android:padding="24dp">
 
         <TextView
             android:id="@+id/textFullName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="John Doe"
+            android:textColor="#2E7D32"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:gravity="center"
-            android:layout_marginBottom="16dp"/>
+            android:gravity="center" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-            android:layout_marginBottom="16dp"/>
+            android:background="#BDBDBD"
+            android:layout_marginVertical="16dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,7 +50,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/email"
-                />
+                app:tint="#2E7D32" />
 
             <TextView
                 android:id="@+id/textEmail"
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:text="john.doe@example.com"
                 android:textSize="16sp"
-                android:textColor="@android:color/black"
+                android:textColor="#000000"
                 android:layout_marginStart="16dp"/>
         </LinearLayout>
 
@@ -71,16 +71,15 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/phone"
-                />
+                app:tint="#2E7D32" />
 
             <TextView
                 android:id="@+id/textMobileNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="09154443332"
-                android:maxLength="11"
                 android:textSize="16sp"
-                android:textColor="@android:color/black"
+                android:textColor="#000000"
                 android:layout_marginStart="16dp"/>
         </LinearLayout>
     </LinearLayout>
@@ -88,23 +87,20 @@
     <Button
         android:id="@+id/buttonLogout"
         android:layout_width="200dp"
-        android:layout_height="48dp"
-        android:backgroundTint="@android:color/white"
-        android:textColor="@color/healthcare_blue"
+        android:layout_height="52dp"
         android:text="Logout"
-        android:textSize="16sp"
-        android:textAllCaps="false"
-        android:layout_marginBottom="16dp"
-        android:elevation="4dp"/>
+        android:backgroundTint="#FFFFFF"
+        android:textColor="#2E7D32"
+        android:strokeColor="#2E7D32"
+        android:strokeWidth="1"
+        android:layout_marginTop="32dp"/>
 
     <Button
         android:id="@+id/buttonDeleteAccount"
         android:layout_width="200dp"
-        android:layout_height="48dp"
-        android:backgroundTint="@android:color/holo_red_light"
-        android:textColor="@android:color/white"
+        android:layout_height="52dp"
         android:text="Delete Account"
-        android:textSize="16sp"
-        android:textAllCaps="false"
-        android:elevation="4dp"/>
+        android:backgroundTint="#D32F2F"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="16dp"/>
 </LinearLayout>

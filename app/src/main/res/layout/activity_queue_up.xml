@@ -2,7 +2,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="#FFFFFF"
     android:fillViewport="true"
     android:padding="24dp">
 
@@ -19,14 +19,14 @@
             android:text="Queue Up"
             android:textSize="28sp"
             android:textStyle="bold"
-            android:textColor="@android:color/white"
+            android:textColor="#2E7D32"
             android:layout_marginBottom="32dp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Select Hospital"
-            android:textColor="@android:color/white"
+            android:textColor="#2E7D32"
             android:textSize="16sp"
             android:layout_marginBottom="8dp"/>
 
@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Select Department"
-            android:textColor="@android:color/white"
+            android:textColor="#2E7D32"
             android:textSize="16sp"
             android:layout_marginBottom="8dp"/>
 
@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Additional Information (Optional)"
-            android:textColor="@android:color/white"
+            android:textColor="#2E7D32"
             android:textSize="16sp"
             android:layout_marginBottom="8dp"/>
 
@@ -67,28 +67,25 @@
             android:id="@+id/editTextPatientComments"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:background="@drawable/comments_background"
+            android:background="@drawable/edittext_bg_green"
             android:padding="16dp"
-            android:layout_marginBottom="70dp"
+            android:layout_marginBottom="24dp"
             android:hint="Describe your symptoms or reason for visit..."
             android:gravity="top|start"
             android:inputType="textMultiLine"
             android:maxLines="5"
-            android:textColor="@android:color/black"
-            android:textColorHint="@android:color/darker_gray"
-            android:scrollbars="vertical"/>
-
+            android:textColor="#000000"
+            android:textColorHint="#757575"/>
 
         <Button
             android:id="@+id/buttonGetQueue"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:layout_marginBottom="16dp"
-            android:stateListAnimator="@null"
             android:text="Get Queue Number"
-            android:backgroundTint="@android:color/white"
-            android:textColor="@color/healthcare_blue"
-            android:textSize="18sp" />
+            android:backgroundTint="#2E7D32"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp"/>
 
         <Button
             android:id="@+id/buttonBack"
@@ -96,20 +93,17 @@
             android:layout_height="52dp"
             android:text="Back to Home"
             android:textSize="18sp"
-            android:textColor="@color/white"
-            android:backgroundTint="@android:color/transparent"
-
-            android:stateListAnimator="@null"/>
+            android:textColor="#2E7D32"
+            android:backgroundTint="#FFFFFF"
+            android:strokeColor="#2E7D32"
+            android:strokeWidth="1"/>
 
         <FrameLayout
             android:id="@+id/progress_overlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
-            android:background="#80000000"
-            android:elevation="16dp"
-            android:layout_gravity="center"
-            >
+            android:background="#80000000">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -123,14 +117,13 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:indeterminate="true"
-                    android:indeterminateTint="@android:color/white"
-                    android:layout_marginBottom="16dp"/>
+                    android:indeterminateTint="#FFFFFF"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Please wait..."
-                    android:textColor="@android:color/white"
+                    android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold"/>
             </LinearLayout>
